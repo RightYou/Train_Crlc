@@ -27,7 +27,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--model_path")
 args = parser.parse_args()
 model_path = args.model_path
-# model_path = r"I:\KongLingYi\train_CNN\checkpoints\CRLCv6_I_QP47~55_C2\CRLCv6_I_QP47~55_C2_202103_100_-22.21.ckpt"
+# model_path = r"I:\train_CNN\checkpoints\CRLCv6_I_QP47~55_C2\CRLCv6_I_QP47~55_C2_202103_100_-22.21.ckpt"
 
 if __name__ == '__main__':
     start = time.time()
