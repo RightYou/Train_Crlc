@@ -1,7 +1,7 @@
 import argparse
 import time
 from random import shuffle
-from RWARN_C2_R3_5K import model as model
+# from RWARN_C2_R3_5K import model as model
 from UTILS import *
 
 tf.logging.set_verbosity(tf.logging.WARN)
