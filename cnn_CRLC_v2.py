@@ -1,12 +1,10 @@
 import sys
-
-if not hasattr(sys, 'argv'):
-    sys.argv = ['']
 import numpy.linalg as lg
-
 from RVDSR_WARN_2 import model as CRLC
 from UTILS import *
 
+if not hasattr(sys, 'argv'):
+    sys.argv = ['']
 np.set_printoptions(threshold=np.inf)  # 用于显示大数组
 tplt = "{0:^30}\t{1:^10}\t{2:^10}"
 
@@ -31,9 +29,9 @@ def prepare_test_data(fileOrDir):
     if type(fileOrDir) is str:
         fileName_list.append(fileOrDir)
 
-        # w, h = getWH(fileOrDir)
+        # w, h = get_w_h(fileOrDir)
         # imgY = getYdata(fileOrDir, [w, h])
-        imgY = c_getYdata(fileOrDir)
+        imgY = c_get_y_data(fileOrDir)
         imgY = normalize(imgY)
 
         imgY = np.resize(imgY, (1, imgY.shape[0], imgY.shape[1], 1))
@@ -43,9 +41,9 @@ def prepare_test_data(fileOrDir):
     elif len(fileOrDir) == 1:
         fileName_list = load_file_list(fileOrDir)
         for path in fileName_list:
-            # w, h = getWH(path)
+            # w, h = get_w_h(path)
             # imgY = getYdata(path, [w, h])
-            imgY = c_getYdata(path)
+            imgY = c_get_y_data(path)
             imgY = normalize(imgY)
 
             imgY = np.resize(imgY, (1, imgY.shape[0], imgY.shape[1], 1))
@@ -58,11 +56,11 @@ def prepare_test_data(fileOrDir):
         test_list = get_train_list(load_file_list(fileOrDir[0]), load_file_list(fileOrDir[1]))
         for pair in test_list:
             filesize = os.path.getsize(pair[0])
-            picsize = getWH(pair[0])[0] * getWH(pair[0])[0] * 3 // 2
+            picsize = get_w_h(pair[0])[0] * get_w_h(pair[0])[0] * 3 // 2
             numFrames = filesize // picsize
             # if numFrames ==1:
-            or_imgY = c_getYdata(pair[0])
-            gt_imgY = c_getYdata(pair[1])
+            or_imgY = c_get_y_data(pair[0])
+            gt_imgY = c_get_y_data(pair[1])
 
             # normalize
             or_imgY = normalize(or_imgY)

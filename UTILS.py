@@ -6,6 +6,7 @@ import numpy as np
 import tensorflow as tf
 from PIL import Image
 
+# 训练普通模型的时候改成TRAIN就好了
 from TRAIN_CRLC import BATCH_SIZE
 from TRAIN_CRLC import PATCH_SIZE
 
@@ -87,9 +88,9 @@ def get_w_h(yuv_file_name):
     # else:
     #     wxh = os.path.basename(de_yuv_file_name).split('_')[1]
 
-    # method 2：字符串处理法
+    # method 2：字符串处理法，对文件命名有要求
     yuv_file_name = os.path.basename(yuv_file_name)  # 获取文件名
-    wxh = yuv_file_name.replace('.yuv', '').split('_')[1]  # 获得number x number的字符串
+    wxh = yuv_file_name.replace('.yuv', '').split('_')[-1]  # 获得number x number的字符串
 
     w, h = wxh.split('x')
     return int(w), int(h)
@@ -111,7 +112,7 @@ def get_y_data(path, size):
         # for n in range(h):
         #     for m in range(w):
         #         y_data1[n, m] = ord(fp.read(1))
-    print(type(y_data)=="ndarray")
+
     return y_data
 
 
@@ -189,9 +190,10 @@ def prepare_nn_data(train_list):
     return input_list, gt_list
 
 
+# 计算PSNR
 def psnr(hr_image, sr_image, max_value=255.0):
     eps = 1e-10
-    if ((type(hr_image) == type(np.array([]))) or (type(hr_image) == type([]))):
+    if isinstance(hr_image, np.ndarray) or isinstance(hr_image, list):
         hr_image_data = np.asarray(hr_image, 'float32')
         sr_image_data = np.asarray(sr_image, 'float32')
 

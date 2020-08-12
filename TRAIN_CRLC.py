@@ -19,6 +19,7 @@ SAMPLE_PATH = "./samples/%s/" % EXP_DATA  # Store result pic
 PATCH_SIZE = (64, 64)  # The size of the input image in the convolutional neural network
 BATCH_SIZE = 64  # The number of patches extracted from a picture added to the train set
 BASE_LR = 1e-3  # Base learning rate
+
 LR_DECAY_RATE = 0.5
 LR_DECAY_STEP = 50
 MAX_EPOCH = 500
