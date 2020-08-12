@@ -302,17 +302,17 @@ def predict(dgr, src, qp, block_size=256):
 
 
 def test_all_ckpt(modelPath):
-    global mCRLC
     low_img = r"F:\0wzyData\test_set\QP53"
-    heigh_img = r"F:\0wzyData\test_set\label"
-    original_ycbcr, gt_y, fileName_list = prepare_test_data([low_img, heigh_img])
-    total_imgs = len(fileName_list)
+    high_img = r"F:\0wzyData\test_set\label"
+    original_ycbcr, gt_y, file_name_list = prepare_test_data([low_img, high_img])
+    total_img = len(file_name_list)
 
     tem = [f for f in os.listdir(modelPath) if 'data' in f]
-    ckptFiles = sorted([r.split('.data')[0] for r in tem])
+    ckpt_files = sorted([r.split('.data')[0] for r in tem])
     max_ckpt = 0
     max_ckpt_psnr = 0
-    for ckpt in ckptFiles:
+    global mCRLC
+    for ckpt in ckpt_files:
         epoch = int(ckpt.split('.')[0].split('_')[-2])
         # if epoch != 177:
         #  continue
@@ -326,9 +326,10 @@ def test_all_ckpt(modelPath):
             rec, _ = predict(denormalize(imgY)[0, :, :, 0].tolist(), gtY[0, :, :, 0].tolist(), 212, 256)
             cur_img_psnr = psnr(rec, np.reshape(gtY, np.shape(rec)))
             sum_img_psnr = cur_img_psnr + sum_img_psnr
-            print(tplt.format(os.path.basename(fileName_list[i]), cur_img_psnr,
+            print(tplt.format(os.path.basename(file_name_list[i]), cur_img_psnr,
                               psnr(denormalize(np.reshape(imgY, np.shape(rec))), np.reshape(gtY, np.shape(rec)))))
-        cur_ckpt_psnr = sum_img_psnr / total_imgs
+
+        cur_ckpt_psnr = sum_img_psnr / total_img
         if cur_ckpt_psnr > max_ckpt_psnr:
             max_ckpt_psnr = cur_ckpt_psnr
             max_ckpt = epoch
