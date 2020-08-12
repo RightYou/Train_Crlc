@@ -1,11 +1,13 @@
-import threading
+import math
+import os
+import random
 import re
+import threading
+
 import numpy as np
 import tensorflow as tf
-import math, os, random
-from scipy.linalg import hadamard
-import scipy.misc
 from PIL import Image
+from scipy.linalg import hadamard
 
 from TRAIN_CRLC import BATCH_SIZE
 from TRAIN_CRLC import PATCH_SIZE
@@ -107,7 +109,8 @@ def get_train_list(lowList, highList):
     train_list = []
     for i in range(len(lowList)):
         qp = lowList[i].split("\\")[-2].split("qp")[1]
-        if 47 <= int(qp) <= 56:
+
+        if 56 <= int(qp) <= 65:
             train_list.append([lowList[i], highList[i % len(highList)]])
     return train_list
 
