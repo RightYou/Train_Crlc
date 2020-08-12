@@ -7,7 +7,7 @@ import numpy.linalg as lg
 from RVDSR_WARN_2 import model as CRLC
 from UTILS import *
 
-np.set_printoptions(threshold=np.inf)
+np.set_printoptions(threshold=np.inf)  # 用于显示大数组
 tplt = "{0:^30}\t{1:^10}\t{2:^10}"
 
 model_set = {
