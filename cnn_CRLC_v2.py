@@ -4,7 +4,7 @@ if not hasattr(sys, 'argv'):
     sys.argv = ['']
 import numpy.linalg as lg
 
-from CRLC_v24 import crlc_model as CRLC
+from RVDSR_WARN_2 import model as CRLC
 from UTILS import *
 
 np.set_printoptions(threshold=np.inf)

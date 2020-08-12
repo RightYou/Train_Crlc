@@ -1,7 +1,7 @@
 import argparse
 import time
 from random import shuffle
-from CRLC_v24 import crlc_model as model
+from RVDSR_WARN_2 import model as model
 from UTILS import *
 
 tf.logging.set_verbosity(tf.logging.WARN)

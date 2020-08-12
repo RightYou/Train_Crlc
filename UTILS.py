@@ -7,7 +7,6 @@ import threading
 import numpy as np
 import tensorflow as tf
 from PIL import Image
-from scipy.linalg import hadamard
 
 from TRAIN_CRLC import BATCH_SIZE
 from TRAIN_CRLC import PATCH_SIZE
