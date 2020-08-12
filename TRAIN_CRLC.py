@@ -62,10 +62,6 @@ if __name__ == '__main__':
     optimizer_adam = tf.train.AdamOptimizer(learning_rate, 0.9)
     opt_adam = optimizer_adam.minimize(loss, global_step=global_step)
 
-    # optimizer_SGD = tf.train.GradientDescentOptimizer(learning_rate)
-    # opt_SGD = optimizer_SGD.minimize(loss, global_step=global_step)
-    opt_SGD = tf.train.GradientDescentOptimizer(0.5).minimize(loss, global_step=global_step)
-
     saver = tf.train.Saver(max_to_keep=0)
 
     config = tf.ConfigProto(allow_soft_placement=True)
