@@ -5,19 +5,17 @@ if not hasattr(sys, 'argv'):
 import numpy.linalg as lg
 
 from CRLC_v24 import crlc_model as CRLC
-# from CRLC_v24 import crlc_model_5_v1 as CRLC
 from UTILS import *
 
 np.set_printoptions(threshold=np.inf)
-tplt1 = "{0:^30}\t{1:^10}\t{2:^10}\t{3:^10}\t{4:^10}"  # \t{4:^10}\t{5:^10}
-tplt2 = "{0:^30}\t{1:^10}\t{2:^10}"
+tplt = "{0:^30}\t{1:^10}\t{2:^10}"
 
 model_set = {
 
 }
 
 config = tf.ConfigProto()
-config.gpu_options.per_process_gpu_memory_fraction = 1  # 分配50%
+config.gpu_options.per_process_gpu_memory_fraction = 1
 config.gpu_options.allow_growth = True
 
 global mCRLC
@@ -251,7 +249,6 @@ def predict(dgr, src, qp, block_size=256):
     cols = math.ceil(float(wid) / block_size)
     dgr = np.asarray(dgr, dtype='float32')
     src = np.asarray(src, dtype='float32')
-    # rec=np.zeros((np.shape(dgr)[0]+1, np.shape(dgr)[1]))
     rec = np.zeros(np.shape(src))
     A_list = []
     for i in range(rows):
@@ -275,7 +272,6 @@ def predict(dgr, src, qp, block_size=256):
             if wid < block_size:
                 start_clow = 0
                 end_clow = wid
-            # print(start_row,end_row,start_clow,end_clow)
             sub_dgr = dgr[start_row:end_row, start_clow:end_clow]
             sub_src = src[start_row:end_row, start_clow:end_clow]
             sub_r = (sub_src - sub_dgr).flatten()
@@ -289,8 +285,6 @@ def predict(dgr, src, qp, block_size=256):
             # print(A)
 
             sub_rec = sub_dgr + np.sum(np.multiply(R[start_row:end_row, start_clow:end_clow, :], A / scale), axis=2)
-            # A[0]=random.randint(A0_min,A0_max)
-            # A[0] = random.randint(A1_min, A1_max)
             A_list.append(A.astype('int'))
 
             rec[start_row:end_row, start_clow:end_clow] = sub_rec
@@ -299,26 +293,12 @@ def predict(dgr, src, qp, block_size=256):
     A_list = np.around(A_list)
     A_list = A_list.astype('int')
     A_list = A_list.tolist()
-    # print(A_list,flush=True)
 
     rec = np.around(rec)
     rec = np.clip(rec, 0, 255)
     rec = rec.astype('int')
     rec = rec.tolist()
-    # print("psnr",psnr(src,rec))
-    # showImg(rec, r"H:\KONG\test_result\E20011601_pic\BasketballDrill_416x240_QP53_CRLC1.jpg")
-    #
-    # print(rec)
     return rec, A_list
-
-
-def showImg(inp, name=r"D:/rec/compose.jpg"):
-    h, w = inp[0], inp[1]
-    tem = np.asarray(inp, dtype='uint8')
-    # np.save(r"H:\KONG\cnn_2K%f" % time.time(),tem)
-    tem = Image.fromarray(tem, 'L')
-    tem.show()
-    tem.save(name)
 
 
 def test_all_ckpt(modelPath):
@@ -334,59 +314,20 @@ def test_all_ckpt(modelPath):
     max_ckpt_psnr = 0
     for ckpt in ckptFiles:
         epoch = int(ckpt.split('.')[0].split('_')[-2])
-        loss = int(ckpt.split('.')[0].split('_')[-1])
-        #
         # if epoch != 177:
         #  continue
 
         mCRLC = Predict(CRLC, os.path.join(modelPath, ckpt))
-        # init(0,212)
-
         sum_img_psnr = 0
-        cur_ckpt_psnr = 0
         img_index = [14, 17, 4, 2, 7, 10, 12, 3, 0, 13, 16, 5, 6, 1, 15, 8, 9, 11]
         for i in img_index:
-            # if i != 3:
-            #     continue
             imgY = original_ycbcr[i][0]
-
-            # print((imgY[0,0,0,:]))
-            # exit()
             gtY = gt_y[i] if gt_y else 0
-            # print(np.shape(imgY),np.shape(gtY))
-            # showImg(denormalize(np.reshape(original_ycbcr[i][0], [480,832])))
-            # showImg(np.reshape(gtY, [480,832]))
-            # print(imgY.shape)
-
-            # block_size=64
-            # padding_size=8
-            # sub_imgs=zip(divide_img(imgY,block_size,padding_size),divide_img((normalize(gtY)),block_size,padding_size))
-            # recs=[]
-            # for lowY,gY in sub_imgs:
-            #     #print(type(predictor.predict(lowY, gY)))
-            #     recs.append(predictor.predict(lowY, gY)[0])
-            # rec=compose_img(imgY,recs,block_size,padding_size)
-            # # print(psnr(np.reshape(denormalize(imgY), np.shape(rec)), np.reshape(gtY, np.shape(rec))))
-            # cur_img_psnr = psnr(rec, np.reshape(gtY, np.shape(rec)))
-
-            rec, _ = predict(denormalize(imgY)[0, :, :, 0].tolist(), gtY[0, :, :, 0].tolist(), 212,
-                             128)  # [:,:64,:64,:]
+            rec, _ = predict(denormalize(imgY)[0, :, :, 0].tolist(), gtY[0, :, :, 0].tolist(), 212, 256)
             cur_img_psnr = psnr(rec, np.reshape(gtY, np.shape(rec)))
-
-            '''
-            print(psnr(denormalize(np.reshape(imgY[:, :64, :64, :], [np.shape(imgY[:, :64, :64, :])[1],
-                                                                     np.shape(imgY[:, :64, :64, :])[2]])),
-                       np.reshape(gtY[:, :64, :64, :],
-                                  [np.shape(imgY[:, :64, :64, :])[1], np.shape(imgY[:, :64, :64, :])[2]])))
-            showImg(np.reshape(gtY[:, :64, :64, :], np.shape(rec)))
-            cur_psnr[cnnTime] = psnr(rec, np.reshape(gtY[:, :64, :64, :], np.shape(rec)))
-            '''
-            # print(psnr(denormalize(np.reshape(imgY, [np.shape(imgY)[1], np.shape(imgY)[2]])),
-            #            np.reshape(gtY, [np.shape(imgY)[1], np.shape(imgY)[2]])))
-
             sum_img_psnr = cur_img_psnr + sum_img_psnr
-            print(tplt2.format(os.path.basename(fileName_list[i]), cur_img_psnr,
-                               psnr(denormalize(np.reshape(imgY, np.shape(rec))), np.reshape(gtY, np.shape(rec)))))
+            print(tplt.format(os.path.basename(fileName_list[i]), cur_img_psnr,
+                              psnr(denormalize(np.reshape(imgY, np.shape(rec))), np.reshape(gtY, np.shape(rec)))))
         cur_ckpt_psnr = sum_img_psnr / total_imgs
         if cur_ckpt_psnr > max_ckpt_psnr:
             max_ckpt_psnr = cur_ckpt_psnr
@@ -395,6 +336,4 @@ def test_all_ckpt(modelPath):
 
 
 if __name__ == '__main__':
-    # init(0,0)
-    # test_all_ckpt(r"F:\3wzy\train_crlc\checkpoints\CRLC_v24_I_QP47~56_C2_20080301")
     test_all_ckpt(r"F:\3wzy\train_crlc\checkpoints\WARN_R3_C2_5K_QP47~56_200810")
