@@ -27,20 +27,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--model_path")
 args = parser.parse_args()
 model_path = args.model_path
-
 # model_path = r"I:\KongLingYi\train_CNN\checkpoints\CRLCv6_I_QP47~55_C2_202103\CRLCv6_I_QP47~55_C2_202103_100_-22.21.ckpt"
-# # Get, Print, and Edit Pruning Hyperparameters
-# pruning_hparams = pruning.get_pruning_hparams()
-# print("Pruning Hyper parameters:", pruning_hparams)
-# # Change hyperparameters to meet our needs
-# pruning_hparams.begin_pruning_step = 0
-# pruning_hparams.end_pruning_step = 250
-# pruning_hparams.pruning_frequency = 1
-# pruning_hparams.sparsity_function_end_step = 250
-# pruning_hparams.target_sparsity = 0.9
-# # Create a pruning object using the pruning specification, sparsity seems to have priority over the hparam
-# p = pruning.Pruning(pruning_hparams, global_step=2, sparsity=0.9)
-# prune_op = p.conditional_mask_update_op()
 
 if __name__ == '__main__':
     start = time.time()
