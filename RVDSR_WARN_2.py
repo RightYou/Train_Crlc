@@ -2,6 +2,8 @@ import tensorflow as tf
 import numpy as np
 
 
+# 5k参数，输出2个通道，循环3次，开始和结束都有正则化，结束的正则化有点问题。
+
 def ResBlock(temp_tensor, name, times=1):
     skip_tensor = temp_tensor
     with tf.variable_scope(name, reuse=tf.AUTO_REUSE):

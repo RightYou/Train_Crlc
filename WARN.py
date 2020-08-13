@@ -2,10 +2,12 @@ import tensorflow as tf
 import numpy as np
 
 
+# WARN原版网络，14W参数
+
 def resblock(temp_tensor, convId, weights):
     out_tensor = None
     skip_tensor = None
-    conv_secondID=0
+    conv_secondID = 0
 
     skip_tensor = temp_tensor
 
@@ -19,7 +21,7 @@ def resblock(temp_tensor, convId, weights):
     tf.add_to_collection(tf.GraphKeys.WEIGHTS, tf.contrib.layers.l2_regularizer(1.)(conv_w))
     out_tensor = tf.nn.relu(
         tf.nn.bias_add(tf.nn.conv2d(temp_tensor, conv_w, strides=[1, 1, 1, 1], padding='SAME'), conv_b))
-    conv_secondID+=1
+    conv_secondID += 1
 
     # Conv, 1x1, filters=25
     conv_w = tf.get_variable("conv_%02d_%02d_w" % (convId, conv_secondID), [1, 1, 192, 25],

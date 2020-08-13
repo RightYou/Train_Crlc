@@ -1,6 +1,8 @@
 import tensorflow as tf
 
 
+# 14W参数，输出两个通道，循环两次，开始和结束的卷积没有正则化
+
 def RCRLC_new(temp_tensor, name, times=1):
     skip_tensor = temp_tensor
     with tf.variable_scope(name, reuse=tf.AUTO_REUSE):
