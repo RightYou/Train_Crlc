@@ -71,7 +71,7 @@ def get_train_list(low_list, high_list):
     # method 2：范围QP训练，yuv文件上层目录名需为 qpxx
     assert len(low_list) % len(high_list) == 0, "low:%d, high:%d" % (len(low_list), len(high_list))
     for i in range(len(low_list)):
-        qp = int(low_list[i].split("\\")[-2].split("QP")[-1])
+        qp = int(low_list[i].split("\\")[-2].split("qp")[-1])
         if 47 <= qp <= 56:
             train_list.append([low_list[i], high_list[i % len(high_list)]])
 

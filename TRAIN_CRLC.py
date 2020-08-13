@@ -2,12 +2,12 @@ import argparse
 import time
 from random import shuffle
 from UTILS import *
-from RVDSR_WARN_2 import model as model
+from VDSR_WARN_C2 import model as model
 
 tf.logging.set_verbosity(tf.logging.WARN)
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # set the cuda devices if you have multiple GPUs
 
-EXP_DATA = 'RVDSR_WARN_C2_I_QP47-56_200812'
+EXP_DATA = 'VDSR_WARN_C2_I_QP47-56_200813'
 
 LOW_DATA_PATH = r"F:\0wzy_Data\train_set\av1_deblock_nocdefLr"  # The path where data is stored
 HIGH_DATA_PATH = r"F:\0wzy_Data\train_set\div2k_train_hr_yuv"  # The path where label is stored

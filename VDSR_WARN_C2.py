@@ -22,7 +22,7 @@ def resblock(temp_tensor, convId):
 
     conv_w = tf.get_variable("conv_%02d_%02d_w" % (convId, conv_secondID), [3, 3, 8, 12],
                              initializer=tf.contrib.layers.xavier_initializer())
-    conv_b = tf.get_variable("conv_%02d_%02d_b" % (convId, conv_secondID), [32], initializer=tf.constant_initializer(0))
+    conv_b = tf.get_variable("conv_%02d_%02d_b" % (convId, conv_secondID), [12], initializer=tf.constant_initializer(0))
     tf.add_to_collection(tf.GraphKeys.WEIGHTS, tf.contrib.layers.l2_regularizer(1.)(conv_w))
     out_tensor = tf.nn.bias_add(tf.nn.conv2d(out_tensor, conv_w, strides=[1, 1, 1, 1], padding='SAME'), conv_b)
     conv_secondID += 1
