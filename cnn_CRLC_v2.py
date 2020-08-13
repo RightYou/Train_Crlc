@@ -300,8 +300,8 @@ def predict(dgr, src, qp, block_size=256):
 
 
 def test_all_ckpt(modelPath):
-    low_img = r"F:\0wzyData\test_set\QP53"
-    high_img = r"F:\0wzyData\test_set\label"
+    low_img = r"F:\0wzy_Data\test_set\QP53"
+    high_img = r"F:\0wzy_Data\test_set\label"
     original_ycbcr, gt_y, file_name_list = prepare_test_data([low_img, high_img])
     total_img = len(file_name_list)
 
@@ -312,8 +312,8 @@ def test_all_ckpt(modelPath):
     global mCRLC
     for ckpt in ckpt_files:
         epoch = int(ckpt.split('.')[0].split('_')[-2])
-        # if epoch != 177:
-        #  continue
+        # if epoch != 373:
+        #     continue
 
         mCRLC = Predict(CRLC, os.path.join(modelPath, ckpt))
         sum_img_psnr = 0
@@ -335,4 +335,4 @@ def test_all_ckpt(modelPath):
 
 
 if __name__ == '__main__':
-    test_all_ckpt(r"F:\3wzy\train_crlc\checkpoints\WARN_R3_C2_5K_QP47~56_200810")
+    test_all_ckpt(r"C:\Users\admin\Desktop\新建文件夹\Train_Crlc\checkpoints\RWARN_C2_5006_I_QP47-56_200809")

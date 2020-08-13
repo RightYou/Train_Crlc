@@ -1,8 +1,8 @@
 import argparse
 import time
 from random import shuffle
-from RVDSR_WARN_2 import model as model
 from UTILS import *
+from RVDSR_WARN_2 import model as model
 
 tf.logging.set_verbosity(tf.logging.WARN)
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # set the cuda devices if you have multiple GPUs
@@ -18,8 +18,8 @@ SAMPLE_PATH = "./samples/%s/" % EXP_DATA  # Store result pic
 
 PATCH_SIZE = (64, 64)  # The size of the input image in the convolutional neural network
 BATCH_SIZE = 64  # The number of patches extracted from a picture added to the train set
-BASE_LR = 1e-3  # Base learning rate
 
+BASE_LR = 1e-3  # Base learning rate
 LR_DECAY_RATE = 0.5
 LR_DECAY_STEP = 50
 MAX_EPOCH = 500
@@ -42,12 +42,11 @@ if __name__ == '__main__':
         R = tf.reshape(train_output, [64, 64 * 64, tf.shape(train_output)[-1]])
 
     with tf.name_scope('loss_scope'), tf.device("/gpu:0"):
-        # set the loss function
-
-        # Original loss function
         A = tf.matmul(tf.matmul(tf.matrix_inverse(tf.matmul(tf.transpose(R, perm=[0, 2, 1]), R)),
                                 tf.transpose(R, perm=[0, 2, 1])),
                       tf.reshape(tf.subtract(train_gt, train_input), [64, 64 * 64, 1]))
+        # set the loss function
+        # Original loss function
         loss = tf.reduce_sum(-(tf.matmul(
             tf.matmul(tf.transpose(tf.reshape(tf.subtract(train_gt, train_input), [64, 64 * 64, 1]), perm=[0, 2, 1]),
                       R), A)))
