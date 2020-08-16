@@ -32,12 +32,19 @@ range_set = {
         "QP57~64_C2": (128, -6, -7)
     },
     "range16": {
+        # crlc的量化
         "QP7~16_C2": (1024, 0, -7),
         "QP17~26_C2": (512, 2, -3),
-        "QP27~36_C2": (1024, -13, -15),
-        "QP37~46_C2": (512, -13, -13),
-        "QP47~56_C2": (512, -15, -10),
-        "QP57~64_C2": (256, -9, -10)
+        # "QP27~36_C2": (1024, -13, -15),
+        # "QP37~46_C2": (512, -13, -13),
+        # "QP47~56_C2": (512, -15, -10),
+        # "QP57~64_C2": (256, -9, -10)
+
+        # vdsr_warn的量化
+        "QP27~36_C2": (1024, 0, -15),
+        "QP37~46_C2": (512, 0, -11),
+        "QP47~56_C2": (128, -6, -11),
+        "QP57~64_C2": (512, -7, -13)
     },
     "range32": {
         "QP7~16_C2": (2048, 5, -24),
@@ -54,14 +61,6 @@ range_set = {
         "QP37~46_C2": (2048, -40, -45),
         "QP47~56_C2": (2048, -60, -30),
         "QP57~64_C2": (1024, -40, -40)
-    },
-    "range0": {  # 用于调参
-        "QP7~16_C2": (128, 15, -30),
-        "QP17~26_C2": (128, 10, -10),
-        "QP27~36_C2": (128, -45, -60),
-        "QP37~46_C2": (128, -40, -45),
-        "QP47~56_C2": (128, -60, -30),
-        "QP57~64_C2": (128, -40, -40)
     }
 }
 
@@ -111,7 +110,7 @@ def prepare_test_data(fileOrDir):
     ##The input is two directories, including ground truth.
     elif len(fileOrDir) == 2:
         fileName_list = load_file_list(fileOrDir[0])
-        test_list = get_train_list(load_file_list(fileOrDir[0]), load_file_list(fileOrDir[1]))
+        test_list = get_test_list(load_file_list(fileOrDir[0]), load_file_list(fileOrDir[1]))
         for pair in test_list:
             filesize = os.path.getsize(pair[0])
             picsize = get_w_h(pair[0])[0] * get_w_h(pair[0])[0] * 3 // 2
@@ -310,8 +309,8 @@ def predict(dgr, src, qp, block_size=256):
 
             # 对A量化，码率和画质的平衡
             # A = np.around(A)
-            # A[0] = np.clip(A[0], A0_min, A0_min+arrange-1)
-            # A[1] = np.clip(A[1], A1_min, A1_min+arrange-1)
+            # A[0] = np.clip(A[0], A0_min, A0_min + A_range - 1)
+            # A[1] = np.clip(A[1], A1_min, A1_min + A_range - 1)
             # print(A)
 
             # 统计A的分布
@@ -354,7 +353,7 @@ def show_img(img_np):
 
 def test_all_ckpt(modelPath):
     global CNN_Model
-    low_img = r"F:\0wzy_Data\test_set\QP53"
+    low_img = r"F:\0wzy_Data\test_set\QP32"
     high_img = r"F:\0wzy_Data\test_set\label"
     original_ycbcr, gt_y, file_name_list = prepare_test_data([low_img, high_img])  # 加载验证集及其标签
     total_img = len(file_name_list)  # 获取验证集的总量，用于待会求psnr均值
@@ -366,7 +365,7 @@ def test_all_ckpt(modelPath):
     max_ckpt_psnr = 0  # 最大的峰值信噪比
     for ckpt in ckpt_files:
         epoch = int(ckpt.split('.')[0].split('_')[-2])  # 获取这个模型是第多少个epoch训练出来的
-        # if epoch != 373:
+        # if epoch < 493:
         #     continue
 
         CNN_Model = Predict(model, os.path.join(modelPath, ckpt))  # CNN_Model是全局变量，已经直接传进predict了
@@ -394,7 +393,7 @@ def test_all_ckpt(modelPath):
             # # print(psnr(np.reshape(denormalize(imgY), np.shape(rec)), np.reshape(gtY, np.shape(rec))))
             # cur_img_psnr = psnr(rec, np.reshape(gtY, np.shape(rec)))
 
-            rec, _ = predict(denormalize(imgY)[0, :, :, 0].tolist(), gtY[0, :, :, 0].tolist(), 212, 256)
+            rec, _ = predict(denormalize(imgY)[0, :, :, 0].tolist(), gtY[0, :, :, 0].tolist(), 128, 256)
             cur_img_psnr = psnr(rec, np.reshape(gtY, np.shape(rec)))
 
             # 不知道干什么的代码X2
@@ -421,4 +420,8 @@ def test_all_ckpt(modelPath):
 
 
 if __name__ == '__main__':
-    test_all_ckpt(r"C:\Users\admin\Desktop\新建文件夹\Train_Crlc\checkpoints\RWARN_C2_5006_I_QP47-56_200809")
+    test_all_ckpt(r"C:\Users\admin\Desktop\RVDSR_WARN_C2\QP30-36")
+    # plt.bar(a0_num.keys(), a0_num.values())
+    # plt.show()
+    # plt.bar(a1_num.keys(), a1_num.values())
+    # plt.show()
