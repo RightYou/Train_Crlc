@@ -58,7 +58,7 @@ def load_file_list(directory):
 
 
 # 获取训练集
-def get_train_list(low_list, high_list):
+def get_train_list(low_list, high_list, qp_start, qp_end):
     train_list = []
     # method 1：单QP训练，并获取指定index范围内的数据
     # 使用断言，如果训练集数据和标签长度不一样，触发异常，并不适用于多qp重建图像，共用一组label的情况
@@ -72,7 +72,7 @@ def get_train_list(low_list, high_list):
     assert len(low_list) % len(high_list) == 0, "low:%d, high:%d" % (len(low_list), len(high_list))
     for i in range(len(low_list)):
         qp = int(low_list[i].split("\\")[-2].split("qp")[-1])
-        if 57 <= qp <= 66:
+        if qp_start <= qp <= qp_end:
             train_list.append([low_list[i], high_list[i % len(high_list)]])
 
     return train_list
