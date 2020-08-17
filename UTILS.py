@@ -78,15 +78,20 @@ def get_train_list(low_list, high_list, qp_start, qp_end):
     return train_list
 
 
-# 获取测试集
+# 获取测试集，测试集一般使用一个QP，训练是多QP的
 def get_test_list(low_list, high_list):
     test_list = []
-    # method 1：范围QP测试，yuv文件上层目录名需为 QPxx
-    assert len(low_list) % len(high_list) == 0, "low:%d, high:%d" % (len(low_list), len(high_list))
+    # method 1：单QP测试
+    assert len(low_list) == len(high_list), "low:%d, high:%d 数据与标签不等" % (len(low_list), len(high_list))
     for i in range(len(low_list)):
-        qp = int(low_list[i].split("\\")[-2].split("QP")[-1])
-        # if 47 <= qp <= 56:
-        test_list.append([low_list[i], high_list[i % len(high_list)]])
+        test_list.append([low_list[i], high_list[i]])
+
+    # method 2：范围QP测试，yuv文件上层目录名需为 QPxx
+    # assert len(low_list) % len(high_list) == 0, "low:%d, high:%d" % (len(low_list), len(high_list))
+    # for i in range(len(low_list)):
+    #     qp = int(low_list[i].split("\\")[-2].split("QP")[-1])
+    #     if 47 <= qp <= 56:
+    #         test_list.append([low_list[i], high_list[i % len(high_list)]])
 
     return test_list
 

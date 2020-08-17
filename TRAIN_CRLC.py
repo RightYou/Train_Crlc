@@ -23,9 +23,8 @@ BASE_LR = 1e-3  # Base learning rate
 LR_DECAY_RATE = 0.5
 LR_DECAY_STEP = 50
 MAX_EPOCH = 500
-
-qp_start = 37
-qp_end = 46
+QP_START = 37
+QP_END = 46
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path")
@@ -35,8 +34,8 @@ model_path = args.model_path
 
 if __name__ == '__main__':
     start = time.time()
-    train_list = get_train_list(load_file_list(LOW_DATA_PATH), load_file_list(HIGH_DATA_PATH), qp_start, qp_end)
-    print(len(train_list))
+    train_list = get_train_list(load_file_list(LOW_DATA_PATH), load_file_list(HIGH_DATA_PATH), QP_START, QP_END)
+    print("训练QP为：%d~%d，训练集长度为：%d" % (QP_START, QP_END, len(train_list)))
 
     with tf.name_scope('input_scope'):
         train_input = tf.placeholder('float32', shape=(BATCH_SIZE, PATCH_SIZE[0], PATCH_SIZE[1], 1))
