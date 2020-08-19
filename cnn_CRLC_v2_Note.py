@@ -420,7 +420,7 @@ def test_all_ckpt(modelPath):
 
 
 if __name__ == '__main__':
-    test_all_ckpt(r"C:\Users\admin\Desktop\RVDSR_WARN_C2\QP30-36")
+    test_all_ckpt(r"C:\Users\admin\Desktop\新建文件夹\Train_Crlc\checkpoints\VDSR_WARN_C2_I_QP37-46_200816")
     # plt.bar(a0_num.keys(), a0_num.values())
     # plt.show()
     # plt.bar(a1_num.keys(), a1_num.values())
