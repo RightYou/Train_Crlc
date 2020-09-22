@@ -19,4 +19,5 @@
 	2.更改 from model.CRLC_v** import crlc_model as model 中的**选择不同的模型
 	3.设置 low_img 路径
 	4.测试选择最好模型
-			
+
+Just do it!
