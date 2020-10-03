@@ -2,15 +2,17 @@ import argparse
 import time
 from random import shuffle
 from UTILS import *
-from VDSR_WARN_C2 import model as model
+from CRLC_v24 import crlc_model as model
 
-tf.logging.set_verbosity(tf.logging.WARN)
+# from testModel import model as model
+
+tf.logging.set_verbosity(tf.logging.ERROR)
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # set the cuda devices if you have multiple GPUs
 
-EXP_DATA = 'VDSR_WARN_C2_I_QP37-46_200816'
+EXP_DATA = 'VDSR_WARN_C2_I_QP47-56_200925_test'
 
-LOW_DATA_PATH = r"F:\0wzy_Data\train_set\av1_deblock_nocdefLr"  # The path where data is stored
-HIGH_DATA_PATH = r"F:\0wzy_Data\train_set\div2k_train_hr_yuv"  # The path where label is stored
+LOW_DATA_PATH = r"E:\0WZY\Data_Set\Train_Set\av1_deblock_nocdefLr"  # The path where data is stored
+HIGH_DATA_PATH = r"E:\0WZY\Data_Set\Train_Set\div2k_train_hr_yuv"  # The path where label is stored
 
 LOG_PATH = "./logs/%s/" % EXP_DATA
 CKPT_PATH = "./checkpoints/%s/" % EXP_DATA  # Store the trained models
@@ -23,8 +25,8 @@ BASE_LR = 1e-3  # Base learning rate
 LR_DECAY_RATE = 0.5
 LR_DECAY_STEP = 50
 MAX_EPOCH = 500
-QP_START = 37
-QP_END = 46
+QP_START = 47
+QP_END = 56
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path")
@@ -97,13 +99,14 @@ if __name__ == '__main__':
 
             epoch_time = time.time()
             total_get_data_time, total_network_time = 0, 0
-            for idx in range(1000):
+            for idx in range(100):
                 get_data_time = time.time()
                 input_data, gt_data = prepare_nn_data(train_list)
                 total_get_data_time += (time.time() - get_data_time)
                 network_time = time.time()
                 feed_dict = {train_input: input_data, train_gt: gt_data}
                 _, l, output, g_step = sess.run([opt_adam, loss, train_output, global_step], feed_dict=feed_dict)
+
                 total_network_time += (time.time() - network_time)
                 total_g_loss += l
                 n_iter += 1
